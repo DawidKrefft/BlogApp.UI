@@ -1,0 +1,28 @@
+<div class="container">
+  <div class="my-5">
+    <div class="row">
+      <ng-container *ngIf="blogs$ | async as blogs">
+        <div class="col-12 col-md-4 mb-3" *ngFor="let blog of blogs">
+          <div class="card">
+            <div class="ratio ratio-4x3">
+              <img [src]="blog.featuredImageUrl" class="card-img-top img-fluid image-cover" [alt]="blog.title">
+            </div>
+            <div class="card-body d-flex flex-column">
+              <h5 class="card-title">
+                {{blog.title}}
+              </h5>
+              <p class="card-text">
+                {{blog.shortDescription}}
+              </p>
+              <div class="mt-auto">
+                <a [routerLink]="['/blog', blog.urlHandle]" class="btn btn-primary">
+                  Read More
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</div>
