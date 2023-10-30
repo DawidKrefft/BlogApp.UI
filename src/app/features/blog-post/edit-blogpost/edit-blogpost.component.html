@@ -69,11 +69,15 @@
         <div class="mt-3">
           <label for="categories" class="form-label">Categories</label>
 
-          <ng-container *ngIf="categories$ | async as categories">
-            <select class="form-control" [(ngModel)]="selectedCategories" name="categories" id="categories" multiple>
-              <option *ngFor="let category of categories" [value]="category.id">{{category.name}}</option>
+          <ng-container *ngIf="categories$ | async as paginatedCategories">
+            <select class="form-control" [(ngModel)]="selectedCategories" id="categories" multiple
+              [ngModelOptions]="{standalone: true}">
+              <option *ngFor="let category of paginatedCategories.items" [value]="category.id">
+                {{ category.name }}
+              </option>
             </select>
           </ng-container>
+
         </div>
 
         <div class="mt-3">

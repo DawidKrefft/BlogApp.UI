@@ -3,6 +3,7 @@ import { ImageService } from './image.service';
 import { Observable } from 'rxjs';
 import { BlogImage } from '../../models/blog-image.model';
 import { NgForm } from '@angular/forms';
+import { PaginatedResult } from 'src/app/shared/models/PaginatedResult';
 
 @Component({
   selector: 'app-image-selector',
@@ -13,13 +14,15 @@ export class ImageSelectorComponent implements OnInit {
   private file?: File;
   fileName: string = '';
   title: string = '';
-  images$?: Observable<BlogImage[]>;
+  images$?: Observable<PaginatedResult<BlogImage>>;
+  paginatedResult?: PaginatedResult<BlogImage>;
 
   @ViewChild('form', { static: false }) imageUploadForm?: NgForm;
 
   constructor(private imageService: ImageService) {}
+
   ngOnInit(): void {
-    this.getImages();
+    this.loadImages();
   }
 
   onFileUploadChange(event: Event): void {
@@ -28,7 +31,7 @@ export class ImageSelectorComponent implements OnInit {
   }
 
   uploadImage(): void {
-    const hasFile = this.file !== null;
+    const hasFile = this.file !== undefined;
     const hasFileName = this.fileName !== '';
     const hasTitle = this.title !== '';
 
@@ -39,17 +42,27 @@ export class ImageSelectorComponent implements OnInit {
         .subscribe({
           next: (response) => {
             this.imageUploadForm?.resetForm();
-            this.getImages();
+            this.resetValues();
+            this.loadImages();
           },
         });
     }
+  }
+
+  private resetValues(): void {
+    this.file = undefined;
+    this.fileName = '';
+    this.title = '';
   }
 
   selectImage(image: BlogImage): void {
     this.imageService.selectImage(image);
   }
 
-  private getImages() {
-    this.images$ = this.imageService.getAllImages();
+  loadImages(page: number = 1, pageSize: number = 5) {
+    this.images$ = this.imageService.getAllImages(page, pageSize);
+    this.images$.subscribe((result) => {
+      this.paginatedResult = result;
+    });
   }
 }

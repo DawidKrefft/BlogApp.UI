@@ -15,6 +15,9 @@ export class EditCategoryComponent implements OnInit, OnDestroy {
   paramsSubscription?: Subscription;
   editCategorySubscription?: Subscription;
   category?: Category;
+  validationErrors: string[] = [];
+  validationErrorsName: string = '';
+  validationErrorsUrlHandle: string = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -53,6 +56,33 @@ export class EditCategoryComponent implements OnInit, OnDestroy {
           next: (response) => {
             this.router.navigateByUrl('/admin/categories');
           },
+          error: (error: any) => {
+            if (error.status === 500) {
+              // Handle validation errors
+              if (error.error.detail) {
+                const errorDetail = error.error.detail;
+
+                // Check if error message for "Name"
+                if (errorDetail.includes('Name')) {
+                  this.validationErrorsName =
+                    'Name: ' + this.extractErrorMessage(errorDetail, 'Name');
+                } else {
+                  this.validationErrorsName = '';
+                }
+
+                // Check if error message for "URL Handle"
+                if (errorDetail.includes('URL handle')) {
+                  this.validationErrorsUrlHandle =
+                    'URL Handle: ' +
+                    this.extractErrorMessage(errorDetail, 'URL handle');
+                } else {
+                  this.validationErrorsUrlHandle = '';
+                }
+              }
+            } else {
+              console.error(error);
+            }
+          },
         });
     }
   }
@@ -70,5 +100,11 @@ export class EditCategoryComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.paramsSubscription?.unsubscribe();
     this.editCategorySubscription?.unsubscribe();
+  }
+
+  private extractErrorMessage(errorDetail: string, field: string): string {
+    const errorMessages = errorDetail.split(', ');
+    const fieldError = errorMessages.find((msg) => msg.includes(field));
+    return fieldError ? fieldError : '';
   }
 }

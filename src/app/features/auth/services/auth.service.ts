@@ -6,6 +6,7 @@ import { User } from '../models/user.model';
 import { LoginRequest } from '../models/login-request.model';
 import { LoginResponse } from '../models/login-response.model';
 import { environment } from 'src/environments/environment';
+import { RegisterRequest } from '../models/register-request.model';
 
 @Injectable({
   providedIn: 'root',
@@ -18,6 +19,15 @@ export class AuthService {
   $user = new BehaviorSubject<User | undefined>(undefined);
 
   constructor(private http: HttpClient, private cookieService: CookieService) {}
+
+  register(request: RegisterRequest): Observable<string> {
+    const registerUrl: string = `${this.baseUrl}/api/auth/register`;
+
+    return this.http.post<string>(registerUrl, {
+      email: request.email,
+      password: request.password,
+    });
+  }
 
   login(request: LoginRequest): Observable<LoginResponse> {
     const loginUrl: string = `${this.baseUrl}/api/auth/login`;

@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { Category } from '../models/category.model';
 import { environment } from 'src/environments/environment.development';
 import { UpdateCategoryRequest } from './../models/update-category-request.model';
+import { PaginatedResult } from 'src/app/shared/models/PaginatedResult';
 
 @Injectable({
   providedIn: 'root',
@@ -14,9 +15,12 @@ export class CategoryService {
 
   constructor(private readonly http: HttpClient) {}
 
-  getAllCategories(): Observable<Category[]> {
-    const url: string = `${this.baseUrl}/api/categories`;
-    return this.http.get<Category[]>(url);
+  getAllCategories(
+    page: number = 1,
+    pageSize: number = 50
+  ): Observable<PaginatedResult<Category>> {
+    const url: string = `${this.baseUrl}/api/categories?page=${page}&pageSize=${pageSize}`;
+    return this.http.get<PaginatedResult<Category>>(url);
   }
 
   getCategoryById(id: string): Observable<Category> {

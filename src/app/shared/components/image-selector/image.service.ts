@@ -3,6 +3,7 @@ import { BehaviorSubject, Observable, catchError, throwError } from 'rxjs';
 import { BlogImage } from '../../models/blog-image.model';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
+import { PaginatedResult } from '../../models/PaginatedResult';
 
 @Injectable({
   providedIn: 'root',
@@ -20,9 +21,12 @@ export class ImageService {
 
   constructor(private http: HttpClient) {}
 
-  getAllImages(): Observable<BlogImage[]> {
-    const url: string = `${this.baseUrl}/api/images`;
-    return this.http.get<BlogImage[]>(url);
+  getAllImages(
+    page: number = 1,
+    pageSize: number = 10
+  ): Observable<PaginatedResult<BlogImage>> {
+    const url: string = `${this.baseUrl}/api/images?page=${page}&pageSize=${pageSize}`;
+    return this.http.get<PaginatedResult<BlogImage>>(url);
   }
 
   uploadImage(
@@ -42,7 +46,7 @@ export class ImageService {
     formData.append('fileName', fileName);
     formData.append('title', title);
 
-    const url: string = `${this.baseUrl}/api/images`;
+    const url: string = `${this.baseUrl}/api/images?addAuth=true`;
     return this.http.post<BlogImage>(url, formData);
   }
 

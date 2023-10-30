@@ -1,8 +1,7 @@
 <div class="container">
-
   <h1 class="mt-3">Edit Category</h1>
 
-  <ng-container *ngIf="category;else notFound">
+  <ng-container *ngIf="category; else notFound">
     <form #form="ngForm" (ngSubmit)="onFormSubmit()">
       <div class="mt-2">
         <div class="mt-3">
@@ -12,11 +11,13 @@
         <div class="mt-3">
           <label class="form-label" for="categoryName">Category Name</label>
           <input type="text" id="categoryName" class="form-control" name="categoryName" [(ngModel)]="category.name">
+          <div class="text-danger">{{ validationErrorsName }}</div>
         </div>
         <div class="mt-3">
-          <label class="form-label" for="categoryUrlHandle">Category Url Handle</label>
+          <label class="form-label" for="categoryUrlHandle">Category URL Handle</label>
           <input type="text" id="categoryUrlHandle" class="form-control" name="categoryUrlHandle"
             [(ngModel)]="category.urlHandle">
+          <div class="text-danger">{{ validationErrorsUrlHandle }}</div>
         </div>
 
         <div class="mt-3 d-flex">
@@ -26,11 +27,11 @@
       </div>
     </form>
   </ng-container>
-
+  <!-- Display validation errors -->
+  <!-- <div *ngFor="let error of validationErrors" class="text-danger">{{ error }}</div> -->
   <ng-template #notFound>
     <div class="alert alert-warning" role="alert">
       Category not found!
     </div>
   </ng-template>
-
 </div>

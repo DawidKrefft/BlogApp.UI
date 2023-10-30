@@ -20,3 +20,25 @@
   width: 100%;
   height: 100%;
 }
+
+.card-title,
+.card-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* Number of lines to show */
+  -webkit-box-orient: vertical;
+  white-space: normal; /* Handle long words */
+}
+
+.truncate {
+  max-width: 200px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.fixed-table-height {
+  height: 300px;
+  overflow-y: auto;
+}

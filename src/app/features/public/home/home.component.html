@@ -1,11 +1,39 @@
 <div class="container">
-  <div class="my-5">
+
+  <div class="my-3">
+    <div class="my-3">
+      <!-- Pagination Controls -->
+      <div class="d-flex justify-content-center my-3">
+        <button (click)="loadBlogs(1)" class="btn btn-primary" type="button"
+          [disabled]="(paginatedResult?.page || 1) === 1">
+          First Page
+        </button>
+        <button (click)="loadBlogs((paginatedResult?.page || 1) - 1)" class="btn btn-primary" type="button"
+          [disabled]="(paginatedResult?.page || 1) === 1">
+          Previous Page
+        </button>
+        <button (click)="loadBlogs((paginatedResult?.page || 1) + 1)" class="btn btn-primary" type="button"
+          [disabled]="(paginatedResult?.page || 1) === (paginatedResult?.totalPages || 1)">
+          Next Page
+        </button>
+        <button (click)="loadBlogs((paginatedResult?.totalPages || 1))" class="btn btn-primary" type="button"
+          [disabled]="(paginatedResult?.page || 1) === (paginatedResult?.totalPages || 1)">
+          Last Page
+        </button>
+        <span class="bg-info-subtle align-self-center mx-2">
+          Page {{paginatedResult?.page || 1}} of {{paginatedResult?.totalPages || 1}}
+        </span>
+      </div>
+    </div>
+
+
+
     <div class="row">
-      <ng-container *ngIf="blogs$ | async as blogs">
-        <div class="col-12 col-md-4 mb-3" *ngFor="let blog of blogs">
-          <div class="card">
+      <ng-container *ngIf="blogs$ | async as paginatedResult">
+        <div class="col-12 col-md-3 mb-3" *ngFor="let blog of paginatedResult.items">
+          <div class="card" style="width: 18rem; height: 25rem;">
             <div class="ratio ratio-4x3">
-              <img [src]="blog.featuredImageUrl" class="card-img-top img-fluid image-cover" [alt]="blog.title">
+              <img [src]="blog.featuredImageUrl" class="image-cover" [alt]="blog.title">
             </div>
             <div class="card-body d-flex flex-column">
               <h5 class="card-title">
@@ -21,8 +49,10 @@
               </div>
             </div>
           </div>
+
         </div>
       </ng-container>
     </div>
+
   </div>
 </div>

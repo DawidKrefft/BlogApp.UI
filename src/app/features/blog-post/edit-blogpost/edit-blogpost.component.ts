@@ -8,6 +8,7 @@ import { CategoryService } from '../../category/services/category.service';
 import { Category } from '../../category/models/category.model';
 import { UpdateBlogPost } from '../models/update-blog-post.model';
 import { ImageService } from 'src/app/shared/components/image-selector/image.service';
+import { PaginatedResult } from 'src/app/shared/models/PaginatedResult';
 
 @Component({
   selector: 'app-edit-blogpost',
@@ -17,7 +18,7 @@ import { ImageService } from 'src/app/shared/components/image-selector/image.ser
 export class EditBlogpostComponent implements OnInit, OnDestroy {
   id: string | null = null;
   model?: BlogPost;
-  categories$?: Observable<Category[]>;
+  categories$: Observable<PaginatedResult<Category>> | null = null;
   selectedCategories?: string[];
   isImageSelectorVisible = false;
 
@@ -36,7 +37,7 @@ export class EditBlogpostComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.categories$ = this.categoryService.getAllCategories();
+    this.loadCategories();
 
     this.routeSubscription = this.route.paramMap.subscribe({
       next: (params) => {
@@ -101,6 +102,31 @@ export class EditBlogpostComponent implements OnInit, OnDestroy {
           },
         });
     }
+  }
+
+  isSelected(categoryId: string): boolean {
+    return !!this.selectedCategories?.includes(categoryId);
+  }
+
+  onCategorySelectionChange(event: boolean, categoryId: string) {
+    if (event) {
+      if (this.selectedCategories) {
+        this.selectedCategories.push(categoryId);
+      } else {
+        this.selectedCategories = [categoryId];
+      }
+    } else {
+      if (this.selectedCategories) {
+        const index = this.selectedCategories.indexOf(categoryId);
+        if (index > -1) {
+          this.selectedCategories.splice(index, 1);
+        }
+      }
+    }
+  }
+
+  loadCategories(page: number = 1, pageSize: number = 50) {
+    this.categories$ = this.categoryService.getAllCategories(page, pageSize);
   }
 
   openImageSelector(): void {

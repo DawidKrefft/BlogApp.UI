@@ -30,22 +30,21 @@
       </ul>
 
       <div class="d-flex">
-        <ng-container *ngIf="user === undefined;else showLogout">
+        <ng-container *ngIf="user === undefined; else showLogout">
           <!-- Show Login Button -->
           <a [routerLink]="['/login']" class="btn btn-primary">Login</a>
 
+          <!-- Add Register Button -->
+          <a [routerLink]="['/register']" class="btn btn-primary ms-3">Register</a>
         </ng-container>
         <ng-template #showLogout>
           <div class="d-flex align-items-center">
-            <span>{{user?.email}}</span>
+            <span>{{ user?.email }}</span>
             <button class="btn btn-primary ms-3" (click)="onLogout()">Logout</button>
-
           </div>
-
         </ng-template>
-
-
       </div>
+
 
     </div>
   </div>

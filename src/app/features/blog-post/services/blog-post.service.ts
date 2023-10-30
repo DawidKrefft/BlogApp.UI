@@ -5,6 +5,7 @@ import { environment } from 'src/environments/environment';
 import { AddBlogPost } from '../models/add-blog-post.model';
 import { BlogPost } from '../models/blog-post.model';
 import { UpdateBlogPost } from './../models/update-blog-post.model';
+import { PaginatedResult } from 'src/app/shared/models/PaginatedResult';
 
 @Injectable({
   providedIn: 'root',
@@ -14,9 +15,12 @@ export class BlogPostService {
 
   constructor(private readonly http: HttpClient) {}
 
-  getAllBlogPosts(): Observable<BlogPost[]> {
-    const url: string = `${this.baseUrl}/api/blogposts`;
-    return this.http.get<BlogPost[]>(url);
+  getAllBlogPosts(
+    page: number = 1,
+    pageSize: number = 10
+  ): Observable<PaginatedResult<BlogPost>> {
+    const url: string = `${this.baseUrl}/api/blogposts?page=${page}&pageSize=${pageSize}`;
+    return this.http.get<PaginatedResult<BlogPost>>(url);
   }
 
   getBlogPostById(id: string): Observable<BlogPost> {
